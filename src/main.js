@@ -2,6 +2,7 @@ import '@babel/polyfill'
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
+import Highcharts from 'highcharts'
 import Contextmenu from 'vue-contextmenujs'
 import store from './store/'
 import './logger'
@@ -18,6 +19,7 @@ Vue.prototype.VERSION = version
 
 Vue.use(router)
 Vue.use(Contextmenu)
+Vue.use(Highcharts)
 
 new Vue({
   router,
