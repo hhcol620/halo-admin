@@ -45,7 +45,7 @@
                        :number="statisticsData.visitCount">
           <a-tooltip slot="action">
             <template slot="title">
-              比上次登录文章阅读增加 {{ statisticsData.visitCount }} 人次
+              比上次登录文章阅读增加 {{ statisticsData.lastLoginReadTimes }} 人次
             </template>
             <a href="javascript:void(0);">
               <a-icon v-if="statisticsLoading"
