@@ -8,12 +8,13 @@
 </template>
 
 <script>
+import charts from '@/api/charts.js'
 export default {
   data() {
     return {}
   },
   created() {
-    Highcharts.getJSON('https://cdn.jsdelivr.net/gh/highcharts/highcharts@v7.0.0/samples/data/usdeur.json', function (
+    this.myRequest(function (
       data
     ) {
       Highcharts.chart('container', {
@@ -76,6 +77,14 @@ export default {
         ],
       })
     })
+  },
+  methods: {
+    myRequest(callback) {
+      charts.request().then((res) => {
+        console.log(res.data)
+        callback(res.data)
+      })
+    }
   },
 }
 </script>
