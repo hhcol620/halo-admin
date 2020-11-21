@@ -45,7 +45,7 @@
                        :number="statisticsData.visitCount">
           <a-tooltip slot="action">
             <template slot="title">
-              比上次登录文章阅读增加 {{ statisticsData.lastLoginReadTimes }} 人次
+              比上次登录文章阅读增加 {{ lastLoginReadTimes }} 人次
             </template>
             <a href="javascript:void(0);">
               <a-icon v-if="statisticsLoading"
@@ -203,6 +203,8 @@ export default {
         content: '',
       },
       interval: null,
+      lastLoginReadTimes: 0,
+      times: 0
     }
   },
   beforeMount() {
@@ -273,6 +275,7 @@ export default {
         .statistics()
         .then((response) => {
           this.statisticsData = response.data.data
+          this.lastLoginReadTimes += this.statisticsData.lastLoginReadTimes
         })
         .catch(() => {
           clearInterval(this.interval)

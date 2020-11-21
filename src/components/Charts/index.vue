@@ -1,89 +1,91 @@
 <template>
-  <div>
-    <!-- 这是组件 -->
-    <figure class="highcharts-figure">
-      <div id="container"></div>
-    </figure>
+  <div class="container">
+    <div class="select-data">
+      <a-select default-value="0"
+                style="width: 120px"
+                @change="handleChange">
+        <a-select-option value="0">
+          最近一周
+        </a-select-option>
+        <a-select-option value="1">
+          最近一月
+        </a-select-option>
+        <a-select-option value="2">
+          最近三个月
+        </a-select-option>
+      </a-select>
+    </div>
+    <!-- 这是图表 -->
+    <div id="box"
+         :style="{width: '100%', height: '400px',}"></div>
   </div>
 </template>
 
 <script>
+import echarts from 'echarts'
 import charts from '@/api/charts.js'
 export default {
   data() {
-    return {}
+    return {
+      // 时间段
+      readTimesTrend: {} // 日期对象
+    }
   },
   created() {
-    this.myRequest(function (
-      data
-    ) {
-      Highcharts.chart('container', {
-        chart: {
-          zoomType: 'x',
-        },
-        title: {
-          text: '阅读增量曲线分析',
-        },
-        subtitle: {
-          text:
-            document.ontouchstart === undefined
-              ? 'Click and drag in the plot area to zoom in'
-              : 'Pinch the chart to zoom in',
-        },
-        xAxis: {
-          type: 'datetime',
-        },
-        yAxis: {
-          title: {
-            text: '阅读人次',
-          },
-        },
-        legend: {
-          enabled: false,
-        },
-        plotOptions: {
-          area: {
-            fillColor: {
-              linearGradient: {
-                x1: 0,
-                y1: 0,
-                x2: 0,
-                y2: 1,
-              },
-              stops: [
-                [0, Highcharts.getOptions().colors[0]],
-                [1, Highcharts.color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')],
-              ],
-            },
-            marker: {
-              radius: 2,
-            },
-            lineWidth: 1,
-            states: {
-              hover: {
-                lineWidth: 1,
-              },
-            },
-            threshold: null,
-          },
-        },
-
-        series: [
-          {
-            type: 'area',
-            name: 'USD to EUR',
-            data: data,
-          },
-        ],
-      })
-    })
+    this.handleChange(0)
   },
   methods: {
-    myRequest(callback) {
-      charts.request().then((res) => {
-        console.log(res.data)
-        callback(res.data)
-      })
+    // 渲染交易金额和增长趋势信息
+    async getReadTimesTrend() {
+      const transEchart = echarts.init(document.getElementById('box'))
+      const option = {
+        tooltip: {
+          trigger: 'axis'
+        },
+        legend: {
+          data: ['交易金额']
+        },
+        xAxis: [
+          {
+            type: 'category',
+            data: this.readTimesTrend.x,
+            axisPointer: {
+              type: 'shadow'
+            }
+          }
+        ],
+        yAxis: [
+          {
+            type: 'value',
+            name: '总浏览量',
+            min: 0,
+            max: this.readTimesTrend.max,
+            interval: this.readTimesTrend.interval,
+            axisLabel: {
+              formatter: '{value} 次'
+            }
+          }
+        ],
+        series: [
+          {
+            name: '当前总浏览量',
+            type: 'line',
+            data: this.readTimesTrend.y
+          }
+        ]
+      }
+      transEchart.setOption(option)
+    },
+    // 时间选择器   这里发起请求
+    async handleChange(type) {
+      const { data: res } = await charts.request(type)
+      if (res.status !== 200) {
+        console.log('失败')
+      } else {
+        this.readTimesTrend = res.data
+        // console.log(this.readTimesTrend)
+        this.getReadTimesTrend()
+      }
     }
   },
 }
