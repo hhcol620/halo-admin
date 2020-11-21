@@ -23,6 +23,7 @@
     "ant-design-vue": "^1.7.1",
     "axios": "^0.19.2",
     "dayjs": "^1.8.36",
+    "echarts": "^4.9.0",
     "enquire.js": "^2.1.6",
     "filepond": "^4.20.1",
     "filepond-plugin-image-preview": "^4.6.4",
