@@ -48,7 +48,7 @@ export default {
         xAxis: [
           {
             type: 'category',
-            data: this.readTimesTrend.x,
+            data: this.readTimesTrend.x.reverse(),
             axisPointer: {
               type: 'shadow'
             }
@@ -57,7 +57,7 @@ export default {
         yAxis: [
           {
             type: 'value',
-            name: '总浏览量',
+            name: '浏览量',
             min: 0,
             max: this.readTimesTrend.max,
             interval: this.readTimesTrend.interval,
@@ -68,9 +68,9 @@ export default {
         ],
         series: [
           {
-            name: '当前总浏览量',
+            name: '当天浏览量',
             type: 'line',
-            data: this.readTimesTrend.y
+            data: this.readTimesTrend.y.reverse()
           }
         ]
       }
